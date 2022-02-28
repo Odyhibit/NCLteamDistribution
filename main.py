@@ -5,45 +5,8 @@
 import statistics
 from typing import List
 import display
-
-
-class TeamMember:
-    def __init__(self, args):
-        self.name = args[0]
-        self.osi = int(args[1])
-        self.crypto = int(args[2])
-        self.password = int(args[3])
-        self.log = int(args[4])
-        self.network = int(args[5])
-        self.forensics = int(args[6])
-        self.scanning = int(args[7])
-        self.web_apps = int(args[8])
-        self.enumeration = int(args[9])
-        self.total = int(args[1]) + int(args[2]) + int(args[3]) + int(args[4]) + int(args[5]) + int(args[6]) + \
-                     int(args[7]) + int(args[8]) + int(args[9])
-
-    def get_name(self):
-        return self.name
-
-
-class Team:
-    def __init__(self, name: str, captain: str, team_members: list):
-        self.name = name
-        self.captain = captain
-        self.team_members = team_members
-        self.total = self.calculate_total()
-
-    def calculate_total(self):
-        total = 0
-        for this_person in self.team_members:
-            total += getattr(this_person, 'total')
-        return total
-
-    def add_team_member(self, new_member: TeamMember):
-        self.team_members.append(new_member)
-
-    def get_members(self):
-        return self.team_members
+import Team
+import TeamMember
 
 
 def load_scores():
@@ -57,7 +20,7 @@ def load_scores():
         return score_list
 
 
-def load_pre_selections(scores):
+def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
     max_team_size = 7
     teams = []
@@ -67,16 +30,16 @@ def load_pre_selections(scores):
             row = line.rstrip("\n").split(",")
             team_name = row[0]
             captain = row[1]
-            score = row_from_scores_by_name(captain, scores)
-            team_member = TeamMember(score)
+            score = row_from_scores_by_name(captain, all_scores)
+            team_member = TeamMember.TeamMember(score)
             # if this is a captain create the team else add this person to existing team
             if row[2].lower() == "true":
-                teams.append(Team(team_name, captain, [team_member]))
+                teams.append(Team.Team(team_name, captain, [team_member]))
             else:
                 # add this person to the right team
-                for team in teams:
-                    if team.name == team_name:
-                        team.add_team_member(team_member)
+                for this_team in teams:
+                    if this_team.name == team_name:
+                        this_team.add_team_member(team_member)
 
     return teams
 
@@ -134,9 +97,9 @@ def already_on_team(team_roster: List[Team]) -> List[str]:
     return [this_member.get_name() for this_team in team_roster for this_member in this_team.team_members]
 
 
-def get_low_score_team(roster: List[Team]) -> Team:
-    lowest_team = roster[0]
-    for this_team in roster:
+def get_low_score_team(this_roster: List[Team]) -> Team:
+    lowest_team = this_roster[0]
+    for this_team in this_roster:
         if this_team.total < lowest_team.total:
             lowest_team = this_team
     return lowest_team
@@ -144,7 +107,7 @@ def get_low_score_team(roster: List[Team]) -> Team:
 
 def greedy_team_selection(score_list, team_roster):
     remaining_players = [p for p in score_list if p[0] not in already_on_team(team_roster)]
-    remaining_team_members = [TeamMember(t) for t in remaining_players]
+    remaining_team_members = [TeamMember.TeamMember(t) for t in remaining_players]
     sorted_remaining_players = sorted(remaining_team_members, key=lambda x: x.total, reverse=True)
     while sorted_remaining_players:
         lowest_team = get_low_score_team(team_roster)
