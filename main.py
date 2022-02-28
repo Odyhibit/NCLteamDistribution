@@ -45,7 +45,7 @@ def load_pre_selections(all_scores):
     required_team_count = int(math.ceil(len(all_scores)/max_team_size))
     should_add = required_team_count - len(teams)
     while should_add > 0:
-        teams.append(Team.Team("Bonus Team" + str(len(teams) + 1), "TBD", []))
+        teams.append(Team.Team("Bonus Team " + str(len(teams) + 1), "TBD", []))
         should_add -= 1
     return teams
 
