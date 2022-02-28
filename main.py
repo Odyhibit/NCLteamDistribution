@@ -190,13 +190,29 @@ if __name__ == '__main__':
     #  create a 2 column table with team.name,total.points : captian,captain.name : name,points
     for team in roster:
         column_names = [team.name + "  " + str(team.total), "Captain: " + team.captain]
-        column_widths = [20,20]
+        column_widths = [20, 20]
         table_data = []
         for member in team.team_members:
             table_data.append([member.name, member.total])
-            #print(f"\t\t\t{member.name}{' ' * (15 - len(member.name))}{member.total}")
-        display.table(table_data, column_names,column_widths)
+            # print(f"\t\t\t{member.name}{' ' * (15 - len(member.name))}{member.total}")
+        display.table(table_data, column_names, column_widths)
 
+    '''  #  the code below shows overall numbers
+    
+    #  totals
+    totals = ["   Totals"]
+    totals += total_scores(score_matrix)
+    scores.append(totals)
+
+    #  average
+    average = ["   Average"]
+    average += average_scores(score_matrix)
+    scores.append(average)
+
+    #  standard deviation
+    deviation = ["   Deviation"]
+    deviation += standard_deviation(score_matrix)
+    scores.append(deviation)
     names, score_matrix = matrix_from_lists(scores)
 
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
@@ -221,22 +237,4 @@ if __name__ == '__main__':
     display.table(scores, column_names, column_widths)
     print()
     print()
-
-    '''
-    #  totals
-    totals = ["   Totals"]
-    totals += total_scores(score_matrix)
-    scores.append(totals)
-
-    #  average
-    average = ["   Average"]
-    average += average_scores(score_matrix)
-    scores.append(average)
-
-    #  standard deviation
-    deviation = ["   Deviation"]
-    deviation += standard_deviation(score_matrix)
-    scores.append(deviation)
-    
-
     '''
