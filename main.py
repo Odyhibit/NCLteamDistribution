@@ -4,7 +4,6 @@
 
 import statistics
 from typing import List
-
 import display
 
 
@@ -119,36 +118,20 @@ def transpose_matrix(score_list: List[List[int]]):
     return list(map(list, zip(*score_list)))
 
 
-def average_scores(score_list: List[List[int]]):
-    flipped = transpose_matrix(score_list)
-    averages = []
-    for row in flipped:
-        averages.append(statistics.mean(row))
-    return averages
+def average_scores(score_list: List[List[int]]) -> List[int]:
+    return [statistics.mean(row) for row in transpose_matrix(score_list)]
 
 
-def total_scores(score_list: List[List[int]]):
-    flipped = transpose_matrix(score_list)
-    totals = []
-    for row in flipped:
-        totals.append(sum(row))
-    return totals
+def total_scores(score_list: List[List[int]]) -> List[int]:
+    return [sum(row) for row in transpose_matrix(score_list)]
 
 
-def standard_deviation(score_list: List[List[int]]):
-    flipped = transpose_matrix(score_list)
-    deviations = []
-    for row in flipped:
-        deviations.append(statistics.stdev(row))
-    return deviations
+def standard_deviation(score_list: List[List[int]]) -> List[int]:
+    return [statistics.stdev(row) for row in transpose_matrix(score_list)]
 
 
 def already_on_team(team_roster: List[Team]) -> List[str]:
-    name_list = []
-    for this_team in team_roster:
-        for this_member in this_team.get_members():
-            name_list.append(this_member.get_name())
-    return name_list
+    return [this_member.get_name() for this_team in team_roster for this_member in this_team.team_members]
 
 
 def get_low_score_team(roster: List[Team]) -> Team:
@@ -160,20 +143,13 @@ def get_low_score_team(roster: List[Team]) -> Team:
 
 
 def greedy_team_selection(score_list, team_roster):
-    #  new list remove players already on a team
     remaining_players = [p for p in score_list if p[0] not in already_on_team(team_roster)]
-    # create TeamMember objects from list
     remaining_team_members = [TeamMember(t) for t in remaining_players]
-    #  sort remaining players by total score
     sorted_remaining_players = sorted(remaining_team_members, key=lambda x: x.total, reverse=True)
-    #  add the highest scoring available player to team with the least total points
     while sorted_remaining_players:
-        #  find team with the lowest total score
         lowest_team = get_low_score_team(team_roster)
-        #  add the highest scoring player in sorted list to that team
-        player = sorted_remaining_players.pop(0)
-        #  print(player.name, player.total)
-        lowest_team.add_team_member(player)
+        top_player_available = sorted_remaining_players.pop(0)
+        lowest_team.add_team_member(top_player_available)
         lowest_team.total = lowest_team.calculate_total()
 
     return sorted_remaining_players
@@ -197,8 +173,8 @@ if __name__ == '__main__':
             # print(f"\t\t\t{member.name}{' ' * (15 - len(member.name))}{member.total}")
         display.table(table_data, column_names, column_widths)
 
-    '''  #  the code below shows overall numbers
-    
+    #  the code below shows overall numbers
+    names, score_matrix = matrix_from_lists(scores)
     #  totals
     totals = ["   Totals"]
     totals += total_scores(score_matrix)
@@ -213,18 +189,6 @@ if __name__ == '__main__':
     deviation = ["   Deviation"]
     deviation += standard_deviation(score_matrix)
     scores.append(deviation)
-    names, score_matrix = matrix_from_lists(scores)
-
-    column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
-                    'Web Apps', 'Enumeration']
-    column_widths = [14, 9, 9, 9, 9, 9, 9, 9, 9, 9]
-
-    display.clear_screen()
-    display.down(5)
-    display.ascii_wguncl_colored()
-    display.down(5)
-    display.table(scores, column_names, column_widths)
-    display.down(15)
 
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
                     'Web Apps', 'Enumeration']
@@ -237,4 +201,3 @@ if __name__ == '__main__':
     display.table(scores, column_names, column_widths)
     print()
     print()
-    '''
