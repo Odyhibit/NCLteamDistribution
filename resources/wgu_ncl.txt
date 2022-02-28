@@ -1,0 +1,20 @@
+
+                                                    \___/
+                                                    {0,o}
+                                                    (   )
+WWWWWWWW                           WWWWWWWW      GGGGGmGGGGGGGUUUUUUUU     UUUUUUUU     NNNNNNNN        NNNNNNNN        CCCCCCCCCCCCCLLLLLLLLLLL             
+W::::::W                           W::::::W   GGG::::::::::::GU::::::U     U::::::U     N:::::::N       N::::::N     CCC::::::::::::CL:::::::::L             
+W::::::W                           W::::::W GG:::::::::::::::GU::::::U     U::::::U     N::::::::N      N::::::N   CC:::::::::::::::CL:::::::::L             
+W::::::W                           W::::::WG:::::GGGGGGGG::::GUU:::::U     U:::::UU     N:::::::::N     N::::::N  C:::::CCCCCCCC::::CLL:::::::LL             
+ W:::::W           WWWWW           W:::::WG:::::G       GGGGGG U:::::U     U:::::U      N::::::::::N    N::::::N C:::::C       CCCCCC  L:::::L               
+  W:::::W         W:::::W         W:::::WG:::::G               U:::::D     D:::::U      N:::::::::::N   N::::::NC:::::C                L:::::L               
+   W:::::W       W:::::::W       W:::::W G:::::G               U:::::D     D:::::U      N:::::::N::::N  N::::::NC:::::C                L:::::L               
+    W:::::W     W:::::::::W     W:::::W  G:::::G    GGGGGGGGGG U:::::D     D:::::U      N::::::N N::::N N::::::NC:::::C                L:::::L               
+     W:::::W   W:::::W:::::W   W:::::W   G:::::G    G::::::::G U:::::D     D:::::U      N::::::N  N::::N:::::::NC:::::C                L:::::L               
+      W:::::W W:::::W W:::::W W:::::W    G:::::G    GGGGG::::G U:::::D     D:::::U      N::::::N   N:::::::::::NC:::::C                L:::::L               
+       W:::::W:::::W   W:::::W:::::W     G:::::G        G::::G U:::::D     D:::::U      N::::::N    N::::::::::NC:::::C                L:::::L               
+        W:::::::::W     W:::::::::W       G:::::G       G::::G U::::::U   U::::::U      N::::::N     N:::::::::N C:::::C       CCCCCC  L:::::L         LLLLLL
+         W:::::::W       W:::::::W         G:::::GGGGGGGG::::G U:::::::UUU:::::::U      N::::::N      N::::::::N  C:::::CCCCCCCC::::CLL:::::::LLLLLLLLL:::::L
+          W:::::W         W:::::W           GG:::::::::::::::G  UU:::::::::::::UU       N::::::N       N:::::::N   CC:::::::::::::::CL::::::::::::::::::::::L
+           W:::W           W:::W              GGG::::::GGG:::G    UU:::::::::UU         N::::::N        N::::::N     CCC::::::::::::CL::::::::::::::::::::::L
+            WWW             WWW                  GGGGGG   GGGG      UUUUUUUUU           NNNNNNNN         NNNNNNN        CCCCCCCCCCCCCLLLLLLLLLLLLLLLLLLLLLLLL
