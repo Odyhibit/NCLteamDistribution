@@ -1,3 +1,5 @@
+import TeamMember
+
 class Team:
     def __init__(self, name: str, captain: str, team_members: list):
         self.name = name

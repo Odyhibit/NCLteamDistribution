@@ -1,7 +1,7 @@
 # data is assumed to be in the following format
 # Discord Handle,OSI,Crypto,Password,Log,Network,Forensics,Scanning,Web Apps,Enumeration
 # *note if upgrading to Python 3.9 or later change type hints from List to list
-
+import math
 import statistics
 from typing import List
 import display
@@ -41,6 +41,12 @@ def load_pre_selections(all_scores):
                     if this_team.name == team_name:
                         this_team.add_team_member(team_member)
 
+    #  we need to add additional teams here if the number of teams is less than ceil(len(all_scores)/max_team_size
+    required_team_count = int(math.ceil(len(all_scores)/max_team_size))
+    should_add = required_team_count - len(teams)
+    while should_add > 0:
+        teams.append(Team.Team("Bonus Team" + str(len(teams) + 1), "TBD", []))
+        should_add -= 1
     return teams
 
 
@@ -93,11 +99,11 @@ def standard_deviation(score_list: List[List[int]]) -> List[int]:
     return [statistics.stdev(row) for row in transpose_matrix(score_list)]
 
 
-def already_on_team(team_roster: List[Team]) -> List[str]:
+def already_on_team(team_roster: List[Team.Team]) -> List[str]:
     return [this_member.get_name() for this_team in team_roster for this_member in this_team.team_members]
 
 
-def get_low_score_team(this_roster: List[Team]) -> Team:
+def get_low_score_team(this_roster: List[Team.Team]) -> Team.Team:
     lowest_team = this_roster[0]
     for this_team in this_roster:
         if this_team.total < lowest_team.total:
