@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
                     'Web Apps', 'Enumeration']
-    column_widths = [14, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+    column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
 
     display.clear_screen()
     display.down(5)
@@ -173,11 +173,11 @@ if __name__ == '__main__':
 
     high_score_matrix = []
     for team in roster:
-        highest_per_category = [team.name]
+        highest_per_category = [team.name + " " + str(team.total)]
         for score in team.get_highest_category_score():
             highest_per_category.append(score)
         high_score_matrix.append(highest_per_category)
-    display.table(high_score_matrix, column_names)
+    display.table(high_score_matrix, column_names, column_widths)
     print()
     print()
 
