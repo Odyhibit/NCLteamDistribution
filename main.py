@@ -164,9 +164,7 @@ if __name__ == '__main__':
     column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
 
     display.clear_screen()
-    display.down(5)
     display.ascii_wguncl_colored()
-    display.down(5)
     display.table(scores, column_names, column_widths)
     print()
     print()
