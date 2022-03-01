@@ -170,3 +170,14 @@ if __name__ == '__main__':
     display.table(scores, column_names, column_widths)
     print()
     print()
+
+    high_score_matrix = []
+    for team in roster:
+        highest_per_category = [team.name]
+        for score in team.get_highest_category_score():
+            highest_per_category.append(score)
+        high_score_matrix.append(highest_per_category)
+    display.table(high_score_matrix, column_names)
+    print()
+    print()
+
