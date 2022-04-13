@@ -2,6 +2,7 @@
 # Discord Handle,OSI,Crypto,Password,Log,Network,Forensics,Scanning,Web Apps,Enumeration
 # *note if upgrading to Python 3.9 or later change type hints from List to list
 import math
+import os
 import statistics
 from os.path import exists
 from typing import List
@@ -177,12 +178,15 @@ def display_menu():
     display.main_menu()
     display.up(2)
     display.left(30)
-    next_screen = input("Choose option > ")
-    print("\a")  # bell
-    return next_screen
+    choice = input("Choose option > ")
+
+    return choice
 
 
 def display_team_module_score(full_roster):
+    display.clear_screen()
+    print()
+    print()
     high_score_matrix = []
     for team in full_roster:
         highest_per_category = [team.name + " " + str(team.total)]
@@ -209,6 +213,9 @@ def save_teams(this_roster):
 
 
 if __name__ == '__main__':
+    if os.name == "nt":
+        display.setup_windows_console()
+
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
     scores_file = "resources/NCLscores.csv"
@@ -243,3 +250,4 @@ if __name__ == '__main__':
             display_team_module_score(roster)
         if next_screen == "4":
             save_teams(roster)
+    print(display.Colors.reset)

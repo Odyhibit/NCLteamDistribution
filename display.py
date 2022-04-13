@@ -50,7 +50,7 @@ def setup_windows_console():
     # setup console
     kernel32 = ctypes.windll.kernel32
     kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-    cmd = 'mode 150,80'
+    cmd = 'mode 200, 60'
     os.system(cmd)
 
 
@@ -182,9 +182,10 @@ def right(lines):
 def left(lines):
     put("\33[" + str(lines) + "D")
 
+
 def main_menu():
     outer = Colors.fg_bright_blue
-    outer_chars = ["╭", "─", "┬", "╮", "├", "─", "┼", "┤", "│", " ", "│", "│", "╰", "─", "┴", "╯"]
+    outer_chars = ["*", "-", "|"]
     inner = Colors.fg_yellow
     color = "inner"
 
@@ -206,6 +207,7 @@ def main_menu():
                 put(character)
             line = menu.readline()
         put(inner)
+
 
 
 def ascii_wguncl_colored():
