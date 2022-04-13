@@ -54,6 +54,10 @@ def setup_windows_console():
     os.system(cmd)
 
 
+def put(to_screen):
+    sys.stdout.write(to_screen)
+
+
 def draw_row(margin, char_map, widths, data=None):
     outline = Colors.fg_blue
     inner = Colors.fg_yellow
@@ -159,65 +163,49 @@ def table(table_data, column_headings=None, column_widths=None):
     print(Colors.reset, end="")
 
 
-def text_file_centered(file_name):
-    """Expects all lines to be same length as the fist one"""
-    outline = Colors.fg_blue
-    inner = Colors.fg_yellow
-    print(outline)
-    current_draw_mode = "outline"
-    with open(file_name, 'r', encoding='utf8') as text_file:
-        # use the first line to find the width
-        first_line = text_file.readline()
-        columns = (len(first_line))
-        terminal_size = shutil.get_terminal_size()
-        left_margin = (terminal_size.columns - columns) // 2
-        print(" " * left_margin, end="")
-        for char in first_line:
-            # these are numbers and letters
-            if 47 < ord(char) < 123:
-                if current_draw_mode == "outline":  # change from outline color to inner
-                    print(inner, end="")
-                print(char, end="")
-            elif current_draw_mode == "inner":
-                print(outline, end="")
-            print(char, end="")
-
-        for line in text_file:
-            print(" " * left_margin, end="")
-            for char in line:
-                # these are numbers and letters
-                if 32 < ord(char) < 123:
-                    if current_draw_mode == "outline":  # change from outline color to inner
-                        print(inner, end="")
-                        current_draw_mode = "inner"
-                    print(char, end="")
-                elif ord(char) > 127 or ord(char) < 33:
-                    if current_draw_mode == "inner":
-                        print(outline, end="")
-                        current_draw_mode = "outline"
-                    print(char, end="")
-            # print("")
-    print(Colors.reset, end="")
-
-
 def get_center_screen():
-    terminal_size = shutil.get_terminal_size()
-    return terminal_size.columns // 2
+    return shutil.get_terminal_size().columns // 2
 
 
 def up(lines):
-    move_up = "\033[" + str(lines) + "A"
-    sys.stdout.write(move_up)
-
-
-def right(lines):
-    move_right = "\33[" + str(lines) + "C"
-    sys.stdout.write(move_right)
+    put("\033[" + str(lines) + "A")
 
 
 def down(lines):
-    move_right = "\033[" + str(lines) + "B"
-    sys.stdout.write(move_right)
+    put("\033[" + str(lines) + "B")
+
+
+def right(lines):
+    put("\33[" + str(lines) + "C")
+
+
+def left(lines):
+    put("\33[" + str(lines) + "D")
+
+def main_menu():
+    outer = Colors.fg_bright_blue
+    outer_chars = ["╭", "─", "┬", "╮", "├", "─", "┼", "┤", "│", " ", "│", "│", "╰", "─", "┴", "╯"]
+    inner = Colors.fg_yellow
+    color = "inner"
+
+    with open("resources/main_menu.txt", "r")as menu:
+        line = menu.readline()
+        offset = get_center_screen() - (len(line)//2)
+        margin = " " * offset
+        while line:
+            put(margin)
+            for character in line:
+                if character in outer_chars:
+                    if not (color.__eq__("outer")):
+                        color = "outer"
+                        put(outer)
+                else:
+                    if not color.__eq__("inner"):
+                        color = "inner"
+                        put(inner)
+                put(character)
+            line = menu.readline()
+        put(inner)
 
 
 def ascii_wguncl_colored():
@@ -231,23 +219,23 @@ def ascii_wguncl_colored():
     with open("resources/wgu_ncl.txt", "r") as logo:
         for line in logo:
             output = margin
-            for char in line:
-                if char.isupper() and not outline:
+            for character in line:
+                if character.isupper() and not outline:
                     output += outer
                     outline = True
-                if not char.isupper() and outline:
+                if not character.isupper() and outline:
                     output += inner
                     outline = False
 
                 # for the fowl owl coloring *******
-                if char in ["\\", "/", "_", "{", "}", "(", ")"]:
+                if character in ["\\", "/", "_", "{", "}", "(", ")"]:
                     output += "\u001b[38;5;94m"
-                if char in [","]:
+                if character in [","]:
                     output += Colors.fg_bright_yellow
-                if char in ["0", "o"]:
+                if character in ["0", "o"]:
                     output += Colors.fg_red
                 # for the fowl owl coloring *******
 
-                output += char
+                output += character
             print(f"{output}", end="")
     print()

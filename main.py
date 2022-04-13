@@ -3,6 +3,7 @@
 # *note if upgrading to Python 3.9 or later change type hints from List to list
 import math
 import statistics
+from os.path import exists
 from typing import List
 import display
 import Team
@@ -12,7 +13,7 @@ import TeamMember
 def load_scores():
     score_list = []
     skip_columns = 2
-    with open("resources/NCLscores.csv", "r") as score_file:
+    with open(scores_file, "r") as score_file:
         score_file.readline()  # this skips the column headers
         for line in score_file:
             row = line.rstrip("\n").split(",")
@@ -24,8 +25,8 @@ def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
     max_team_size = 7
     teams = []
-    with open("resources/Team_leads_and_partial_teams.csv", "r") as partials:
-        partials.readline()
+    with open(captains_file, "r") as partials:
+        partials.readline()  # read headers
         for line in partials:
             row = line.rstrip("\n").split(",")
             team_name = row[0]
@@ -42,7 +43,7 @@ def load_pre_selections(all_scores):
                         this_team.add_team_member(team_member)
 
     #  we need to add additional teams here if the number of teams is less than ceil(len(all_scores)/max_team_size
-    required_team_count = int(math.ceil(len(all_scores)/max_team_size))
+    required_team_count = int(math.ceil(len(all_scores) / max_team_size))
     should_add = required_team_count - len(teams)
     while should_add > 0:
         teams.append(Team.Team("Bonus Team " + str(len(teams) + 1), "TBD", []))
@@ -88,7 +89,7 @@ def transpose_matrix(score_list: List[List[int]]):
 
 
 def average_scores(score_list: List[List[int]]) -> List[int]:
-    return [statistics.mean(row) for row in transpose_matrix(score_list)]
+    return [int(statistics.mean(row)) for row in transpose_matrix(score_list)]
 
 
 def total_scores(score_list: List[List[int]]) -> List[int]:
@@ -96,7 +97,7 @@ def total_scores(score_list: List[List[int]]) -> List[int]:
 
 
 def standard_deviation(score_list: List[List[int]]) -> List[int]:
-    return [statistics.stdev(row) for row in transpose_matrix(score_list)]
+    return [int(statistics.stdev(row)) for row in transpose_matrix(score_list)]
 
 
 def already_on_team(team_roster: List[Team.Team]) -> List[str]:
@@ -124,53 +125,66 @@ def greedy_team_selection(score_list, team_roster):
     return sorted_remaining_players
 
 
-if __name__ == '__main__':
-
-    scores = load_scores()
-    roster = load_pre_selections(scores)
-    been_chosen = already_on_team(roster)
-    #  print(been_chosen)
-
-    roster_initial = greedy_team_selection(scores, roster)
-    #  create a 2 column table with team.name,total.points : captian,captain.name : name,points
-    for team in roster:
+def display_teams(full_roster):
+    display.clear_screen()
+    print()
+    print()
+    for team in full_roster:
         column_names = [team.name + "  " + str(team.total), "Captain: " + team.captain]
         column_widths = [20, 20]
         table_data = []
         for member in team.team_members:
             table_data.append([member.name, member.total])
-            # print(f"\t\t\t{member.name}{' ' * (15 - len(member.name))}{member.total}")
         display.table(table_data, column_names, column_widths)
+        print()
+        print()
+    input("press enter to return to menu  . . .")
 
-    #  the code below shows overall numbers
-    names, score_matrix = matrix_from_lists(scores)
+
+def display_players(all_scores):
+    #  separate the names from the score data
+    names, score_matrix = matrix_from_lists(all_scores)
+
     #  totals
     totals = ["   Totals"]
     totals += total_scores(score_matrix)
-    scores.append(totals)
+    all_scores.append(totals)
 
     #  average
     average = ["   Average"]
     average += average_scores(score_matrix)
-    scores.append(average)
+    all_scores.append(average)
 
     #  standard deviation
     deviation = ["   Deviation"]
     deviation += standard_deviation(score_matrix)
-    scores.append(deviation)
-
-    column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
-                    'Web Apps', 'Enumeration']
-    column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+    all_scores.append(deviation)
 
     display.clear_screen()
-    display.ascii_wguncl_colored()
-    display.table(scores, column_names, column_widths)
     print()
     print()
+    display.table(all_scores, column_names, column_widths)
+    print()
+    print()
+    input("press enter to return to menu . . .")
 
+
+def display_menu():
+    display.clear_screen()
+    display.ascii_wguncl_colored()
+    print()
+    print()
+    display.main_menu()
+    display.up(2)
+    display.left(30)
+    next_screen = input("Choose option > ")
+    print("\a")  # bell
+    return next_screen
+
+
+def display_team_module_score(full_roster):
     high_score_matrix = []
-    for team in roster:
+    for team in full_roster:
         highest_per_category = [team.name + " " + str(team.total)]
         for score in team.get_highest_category_score():
             highest_per_category.append(score)
@@ -178,4 +192,54 @@ if __name__ == '__main__':
     display.table(high_score_matrix, column_names, column_widths)
     print()
     print()
+    input("press enter to return to menu . . .")
 
+
+def save_teams(this_roster):
+    output = "Team name,Discord Handle,Team Lead"
+    for team in this_roster:
+        for member in team.get_members():
+            output += team.get_name() + "," + member.get_name() + str(
+                team.get_captain() == member.get_name()) + ", " + "\n"
+
+    with open(save_file, "w") as output_file:
+        output_file.write(output)
+    print("The teams have been saved to ", save_file)
+    input("press enter to return to menu . . .")
+
+
+if __name__ == '__main__':
+    # files
+    captains_file = "resources/Team_leads_and_partial_teams.csv"
+    scores_file = "resources/NCLscores.csv"
+    save_file = "resources/saved_teams.csv"
+
+    # columns
+    column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
+                    'Web Apps', 'Enumeration']
+    column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+
+    # load files
+    next_screen = 0
+    scores = load_scores()
+    if exists(save_file):
+        load_saved = input("Would you like to load saved teams Y/N")
+        if load_saved == "Y" or load_saved == "y":
+            captains_file = save_file
+
+    roster = load_pre_selections(scores)
+    been_chosen = already_on_team(roster)
+
+    #  choose teams
+    roster_initial = greedy_team_selection(scores, roster)
+
+    while next_screen != "5":
+        next_screen = display_menu()
+        if next_screen == "1":
+            display_players(scores)
+        if next_screen == "2":
+            display_teams(roster)
+        if next_screen == "3":
+            display_team_module_score(roster)
+        if next_screen == "4":
+            save_teams(roster)

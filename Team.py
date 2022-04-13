@@ -22,6 +22,12 @@ class Team:
     def get_members(self):
         return self.team_members
 
+    def get_name(self):
+        return self.name
+
+    def get_captain(self):
+        return self.captain
+
     def get_highest_category_score(self):
         #  Categories are:  0-osi,1-Crypto,2-Password,3-Log,4-Network,5-Forensics,6-Scanning,7-Web Apps,8-Enumeration
         highest_scores = [0] * 9
@@ -36,3 +42,4 @@ class Team:
             highest_scores[7] = max(highest_scores[7], member.web_apps)
             highest_scores[8] = max(highest_scores[8], member.enumeration)
         return highest_scores
+
