@@ -203,8 +203,8 @@ def save_teams(this_roster):
     output = "Team name,Discord Handle,Team Lead"
     for team in this_roster:
         for member in team.get_members():
-            output += team.get_name() + "," + member.get_name() + str(
-                team.get_captain() == member.get_name()) + ", " + "\n"
+            output += team.get_name() + "," + member.get_name() + ", " + str(
+                team.get_captain() == member.get_name()) + "\n"
 
     with open(save_file, "w") as output_file:
         output_file.write(output)
