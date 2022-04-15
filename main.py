@@ -132,7 +132,7 @@ def display_teams(full_roster):
     print()
     for team in full_roster:
         column_names = [team.name + "  " + str(team.total), "Captain: " + team.captain]
-        column_widths = [20, 20]
+        column_widths = [40, 20]
         table_data = []
         for member in team.team_members:
             table_data.append([member.name, member.total])
