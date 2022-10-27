@@ -235,6 +235,30 @@ def save_teams(this_roster):
     input("press enter to return to menu . . .")
 
 
+def get_weakest_categories():
+    int_scores = get_int_scores()
+
+    median_scores = []
+    for i in range(1, len(int_scores[0])):
+        int_scores.sort(key=lambda x: x[i])
+        median_scores.append([i, int_scores[len(int_scores)//2][i]])
+    return median_scores
+
+
+def get_int_scores():
+    scores = load_scores()
+    int_scores = []
+    for score in scores:
+        int_scores.append([score[0]] + [int(x) for x in score[1:]])
+    for score in int_scores:
+        score.append(sum(score[1:]))
+    return int_scores
+
+
+def category_team_selection(scores, roster):
+    pass
+
+
 def main():
     # load files
     next_screen = 0
@@ -248,7 +272,9 @@ def main():
     been_chosen = already_on_team(roster)
 
     #  choose teams
-    roster_initial = greedy_team_selection(scores, roster)
+    # todo roster_initial = greedy_team_selection(scores, roster)
+    test = get_weakest_categories()
+    roster_initial = category_team_selection(scores, roster)
 
     while next_screen != "5":
         next_screen = display_menu()
