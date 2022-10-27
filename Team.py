@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 import TeamMember
@@ -42,4 +43,12 @@ class Team:
             highest_scores[7] = max(highest_scores[7], member.web_apps)
             highest_scores[8] = max(highest_scores[8], member.enumeration)
         return highest_scores
+
+    def get_random_member(self):
+        member = random.choice(self.team_members)
+        # not the captain
+        while member == self.captain:
+            member = random.choice(self.team_members)
+
+        return random.choice(self.team_members)
 

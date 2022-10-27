@@ -125,6 +125,13 @@ def greedy_team_selection(score_list, team_roster):
 
     return sorted_remaining_players
 
+def get_random_team_members(this_roster: List[Team.Team], how_many: int):
+    swapping = []
+    while len(swapping) < how_many:
+        print("Choose a team at random, and then get a random player")
+
+
+
 
 def display_teams(full_roster):
     display.clear_screen()
