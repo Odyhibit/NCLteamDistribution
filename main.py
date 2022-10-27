@@ -4,6 +4,7 @@
 import math
 import os
 import statistics
+import sys
 from os.path import exists
 from typing import List
 import display
@@ -33,6 +34,9 @@ def load_pre_selections(all_scores):
             team_name = row[0]
             captain = row[1]
             score = row_from_scores_by_name(captain, all_scores)
+            if score == "Not Found":
+                print(f"cannot find {captain} in {scores_file} ")
+                sys.exit()
             team_member = TeamMember.TeamMember(score)
             # if this is a captain create the team else add this person to existing team
             if row[2].lower() == "true":
@@ -122,8 +126,20 @@ def greedy_team_selection(score_list, team_roster):
         top_player_available = sorted_remaining_players.pop(0)
         lowest_team.add_team_member(top_player_available)
         lowest_team.total = lowest_team.calculate_total()
-
     return sorted_remaining_players
+
+
+def level_team_selection(score_list, team_roster):
+    remaining_players = [p for p in score_list if p[0] not in already_on_team(team_roster)]
+    remaining_team_members = [TeamMember.TeamMember(t) for t in remaining_players]
+    sorted_remaining_players = sorted(remaining_team_members, key=lambda x: x.total, reverse=True)
+    while sorted_remaining_players:
+        lowest_team = get_low_score_team(team_roster)
+        top_player_available = sorted_remaining_players.pop(0)
+        lowest_team.add_team_member(top_player_available)
+        lowest_team.total = lowest_team.calculate_total()
+    return sorted_remaining_players
+
 
 def get_random_team_members(this_roster: List[Team.Team], how_many: int):
     swapping = []
@@ -131,9 +147,9 @@ def get_random_team_members(this_roster: List[Team.Team], how_many: int):
         print("Choose a team at random, and then get a random player")
 
 
-
-
 def display_teams(full_roster):
+    global column_names
+    global column_widths
     display.clear_screen()
     print()
     print()
@@ -219,20 +235,7 @@ def save_teams(this_roster):
     input("press enter to return to menu . . .")
 
 
-if __name__ == '__main__':
-    if os.name == "nt":
-        display.setup_windows_console()
-
-    # files
-    captains_file = "resources/Team_leads_and_partial_teams.csv"
-    scores_file = "resources/NCLscores.csv"
-    save_file = "resources/saved_teams.csv"
-
-    # columns
-    column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
-                    'Web Apps', 'Enumeration']
-    column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
-
+def main():
     # load files
     next_screen = 0
     scores = load_scores()
@@ -258,3 +261,20 @@ if __name__ == '__main__':
         if next_screen == "4":
             save_teams(roster)
     print(display.Colors.reset)
+
+
+if __name__ == '__main__':
+    if os.name == "nt":
+        display.setup_windows_console()
+
+    # files
+    captains_file = "resources/Team_leads_and_partial_teams.csv"
+    scores_file = "resources/NCLscores.csv"
+    save_file = "resources/saved_teams.csv"
+
+    # columns
+    column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
+                    'Web Apps', 'Enumeration']
+    column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+
+    main()

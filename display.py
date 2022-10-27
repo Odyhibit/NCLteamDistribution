@@ -189,9 +189,9 @@ def main_menu():
     inner = Colors.fg_yellow
     color = "inner"
 
-    with open("resources/main_menu.txt", "r")as menu:
+    with open("resources/main_menu.txt", "r") as menu:
         line = menu.readline()
-        offset = get_center_screen() - (len(line)//2)
+        offset = get_center_screen() - (len(line) // 2)
         margin = " " * offset
         while line:
             put(margin)
@@ -207,7 +207,6 @@ def main_menu():
                 put(character)
             line = menu.readline()
         put(inner)
-
 
 
 def ascii_wguncl_colored():
