@@ -234,7 +234,9 @@ def save_teams(this_roster):
     print("The teams have been saved to ", save_file)
     input("press enter to return to menu . . .")
 
-
+# Note: This returns a list of category median scores in form [category index, value]. It would be improved if it \
+# returned the median % completion for each category instead of the overall median score from all players for each \
+# category (since some categories have different max possible scores).
 def get_weakest_categories():
     int_scores = get_int_scores()
 
@@ -242,7 +244,7 @@ def get_weakest_categories():
     for i in range(1, len(int_scores[0])):
         int_scores.sort(key=lambda x: x[i])
         median_scores.append([i, int_scores[len(int_scores)//2][i]])
-    return median_scores
+    return sorted(median_scores, key=lambda x: x[1])
 
 
 def get_int_scores():
@@ -256,7 +258,37 @@ def get_int_scores():
 
 
 def category_team_selection(scores, roster):
-    pass
+    ranked_categories = get_weakest_categories()
+
+    remaining_players = [p for p in scores if p[0] not in already_on_team(roster)]
+    remaining_team_members = [TeamMember.TeamMember(t) for t in remaining_players]
+
+    remaining_players = [p for p in get_int_scores() if p[0] not in already_on_team(roster)]
+
+
+    # For each category, strengthen the weakest team, if possible.
+    for category in ranked_categories[:-1]:
+        if not remaining_players:
+            break
+
+        # Sort players by desc category strength, break ties with asc total strength
+        remaining_players.sort(key=lambda x: x[-1])
+        remaining_players.sort(key=lambda x: x[category[0]], reverse=True)
+
+        # Sort teams by asc category strength, break ties with total max score of all categories
+        roster.sort(key=lambda x: sum(x.get_highest_category_score()))
+        roster = sorted(roster, key=lambda x: x.get_highest_category_score()[category[0] - 1])
+
+        for team in roster:
+            #if next player can help team, add them
+            if team.get_highest_category_score()[category[0] -1] < remaining_players[0][category[0]]:
+                assigned_player = remaining_players.pop(0)
+                team_member = TeamMember.TeamMember(assigned_player)
+                team.add_team_member(team_member)
+            else:
+                break
+
+        # todo: assign remaining players who can't improve any team's category maximum score
 
 
 def main():
@@ -271,9 +303,8 @@ def main():
     roster = load_pre_selections(scores)
     been_chosen = already_on_team(roster)
 
-    #  choose teams
-    # todo roster_initial = greedy_team_selection(scores, roster)
-    test = get_weakest_categories()
+    #  choose team selection method
+    # roster_initial = greedy_team_selection(scores, roster)
     roster_initial = category_team_selection(scores, roster)
 
     while next_screen != "5":

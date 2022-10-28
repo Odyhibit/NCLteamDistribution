@@ -19,6 +19,7 @@ class Team:
 
     def add_team_member(self, new_member: TeamMember):
         self.team_members.append(new_member)
+        self.total = self.calculate_total()
 
     def get_members(self):
         return self.team_members
