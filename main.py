@@ -7,6 +7,7 @@ import statistics
 import sys
 from os.path import exists
 from typing import List
+import bisect
 import display
 import Team
 import TeamMember
@@ -234,6 +235,7 @@ def save_teams(this_roster):
     print("The teams have been saved to ", save_file)
     input("press enter to return to menu . . .")
 
+
 # Note: This returns a list of category median scores in form [category index, value]. It would be improved if it \
 # returned the median % completion for each category instead of the overall median score from all players for each \
 # category (since some categories have different max possible scores).
@@ -243,7 +245,7 @@ def get_weakest_categories():
     median_scores = []
     for i in range(1, len(int_scores[0])):
         int_scores.sort(key=lambda x: x[i])
-        median_scores.append([i, int_scores[len(int_scores)//2][i]])
+        median_scores.append([i, int_scores[len(int_scores) // 2][i]])
     return sorted(median_scores, key=lambda x: x[1])
 
 
@@ -257,14 +259,13 @@ def get_int_scores():
     return int_scores
 
 
-def category_team_selection(scores, roster):
+def category_team_selection(scores, roster, max_team_size):
     ranked_categories = get_weakest_categories()
 
     remaining_players = [p for p in scores if p[0] not in already_on_team(roster)]
     remaining_team_members = [TeamMember.TeamMember(t) for t in remaining_players]
 
     remaining_players = [p for p in get_int_scores() if p[0] not in already_on_team(roster)]
-
 
     # For each category, strengthen the weakest team, if possible.
     for category in ranked_categories[:-1]:
@@ -280,15 +281,39 @@ def category_team_selection(scores, roster):
         roster = sorted(roster, key=lambda x: x.get_highest_category_score()[category[0] - 1])
 
         for team in roster:
-            #if next player can help team, add them
-            if team.get_highest_category_score()[category[0] -1] < remaining_players[0][category[0]]:
+            # If next player can help team, add them
+            if team.get_highest_category_score()[category[0] - 1] < remaining_players[0][category[0]]:
                 assigned_player = remaining_players.pop(0)
                 team_member = TeamMember.TeamMember(assigned_player)
                 team.add_team_member(team_member)
             else:
                 break
 
-        # todo: assign remaining players who can't improve any team's category maximum score
+        # Assign remaining players who can't improve any team's category maximum score using greedy_team_selection
+
+        # greedy_team_selection() method doesn't cap team size, otherwise it could be used by the below 2 lines
+        # remaining_players_strings = [[str(y) for y in x[:-1]] for x in remaining_players]
+        # unassigned = greedy_team_selection(remaining_players_strings, roster)
+
+        # Sort teams by total strength of all team members
+        roster.sort(key=lambda x: x.get_total())
+        remaining_players.sort(key=lambda x: x[-1], reverse=True)
+
+        min_team_size = min([len(x.get_members()) for x in roster])
+        while remaining_players and (min_team_size < max_team_size):
+            top_player = remaining_players.pop(0)
+            for team in roster:
+                if len(team.get_members()) < max_team_size:
+                    team.add_team_member(TeamMember.TeamMember(top_player))
+                    roster.sort(key=lambda x: x.get_total())
+                    min_team_size = min([len(x.get_members()) for x in roster])
+                    break
+
+        unassigned = remaining_players
+
+        if unassigned:
+            print('Unassigned:')
+            print(unassigned)
 
 
 def main():
@@ -303,9 +328,11 @@ def main():
     roster = load_pre_selections(scores)
     been_chosen = already_on_team(roster)
 
+    max_team_size = 7
+
     #  choose team selection method
     # roster_initial = greedy_team_selection(scores, roster)
-    roster_initial = category_team_selection(scores, roster)
+    roster_initial = category_team_selection(scores, roster, max_team_size)
 
     while next_screen != "5":
         next_screen = display_menu()
