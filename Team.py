@@ -19,6 +19,7 @@ class Team:
 
     def add_team_member(self, new_member: TeamMember):
         self.team_members.append(new_member)
+        self.total = self.calculate_total()
 
     def get_members(self):
         return self.team_members
@@ -28,6 +29,9 @@ class Team:
 
     def get_captain(self):
         return self.captain
+
+    def get_total(self):
+        return self.total
 
     def get_highest_category_score(self):
         #  Categories are:  0-osi,1-Crypto,2-Password,3-Log,4-Network,5-Forensics,6-Scanning,7-Web Apps,8-Enumeration
