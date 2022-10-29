@@ -149,18 +149,16 @@ def get_random_team_members(this_roster: List[Team.Team], how_many: int):
 
 
 def display_teams(full_roster):
-    global column_names
-    global column_widths
     display.clear_screen()
     print()
     print()
     for team in full_roster:
-        column_names = [team.name + "  " + str(team.total), "Captain: " + team.captain]
-        column_widths = [40, 20]
+        col_names = [team.name + "  " + str(team.total), "Captain: " + team.captain]
+        col_widths = [40, 20]
         table_data = []
         for member in team.team_members:
             table_data.append([member.name, member.total])
-        display.table(table_data, column_names, column_widths)
+        display.table(table_data, col_names, col_widths)
         print()
         print()
     input("press enter to return to menu  . . .")
@@ -353,7 +351,7 @@ if __name__ == '__main__':
 
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
-    scores_file = "resources/NCLscores.csv"
+    scores_file = "resources/NCL_scores.csv"
     save_file = "resources/saved_teams.csv"
 
     # columns
