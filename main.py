@@ -15,14 +15,20 @@ import TeamMember
 
 def load_scores():
     score_list = []
-    skip_columns = 2
+    skip_columns = -2
     with open(scores_file, "r") as score_file:
         score_file.readline()  # this skips the column headers
         for line in score_file:
             row = line.rstrip("\n").split(",")
-            score_list.append(row[skip_columns:])
+            for i, cell in enumerate(row):
+                if i > 0:
+                    row[i] = get_first_number(row[i])
+            score_list.append(row[:skip_columns])
         return score_list
 
+
+def get_first_number(score_fraction: str) -> str:
+    return score_fraction[0:score_fraction.find(" /")]
 
 def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
@@ -139,7 +145,7 @@ def level_team_selection(score_list, team_roster):
         top_player_available = sorted_remaining_players.pop(0)
         lowest_team.add_team_member(top_player_available)
         lowest_team.total = lowest_team.calculate_total()
-    return sorted_remaining_players
+    return
 
 
 def get_random_team_members(this_roster: List[Team.Team], how_many: int):
@@ -351,12 +357,12 @@ if __name__ == '__main__':
 
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
-    scores_file = "resources/NCL_scores.csv"
+    scores_file = "resources/individual_scores.csv"
     save_file = "resources/saved_teams.csv"
 
     # columns
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
                     'Web Apps', 'Enumeration']
     column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
-
+    print(load_scores())
     main()
