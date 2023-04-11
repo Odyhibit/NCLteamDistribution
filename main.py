@@ -1,5 +1,5 @@
 # data is assumed to be in the following format
-# Discord Handle,OSI,Crypto,Password,Log,Network,Forensics,Scanning,Web Apps,Enumeration
+# Discord Handle,OSI,Crypto,Password,Log,Network,Forensics,Scanning,Enumeration, Web Apps
 # *note if upgrading to Python 3.9 or later change type hints from List to list
 import math
 import os
@@ -15,15 +15,12 @@ import TeamMember
 
 def load_scores():
     score_list = []
-    skip_columns = -2
-    with open(scores_file, "r") as score_file:
+    with open(scores_file, "r", encoding="utf-8") as score_file:
         score_file.readline()  # this skips the column headers
         for line in score_file:
-            row = line.rstrip("\n").split(",")
-            for i, cell in enumerate(row):
-                if i > 0:
-                    row[i] = get_first_number(row[i])
-            score_list.append(row[:skip_columns])
+            if len(line) > 1:
+                row = line.rstrip("\n").split(",")
+                score_list.append(row)
         return score_list
 
 
@@ -258,8 +255,9 @@ def get_int_scores():
     int_scores = []
     for score in scores:
         int_scores.append([score[0]] + [int(x) for x in score[1:]])
-    for score in int_scores:
-        score.append(sum(score[1:]))
+    #for score in int_scores:
+    #    score.append(sum(score[1:]))
+    print(int_scores)
     return int_scores
 
 
@@ -357,7 +355,7 @@ if __name__ == '__main__':
 
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
-    scores_file = "resources/individual_scores.csv"
+    scores_file = "resources/parsed_output.csv"
     save_file = "resources/saved_teams.csv"
 
     # columns
