@@ -31,6 +31,7 @@ with open("resources/NCL_2023_Spring_Team_signup_Responses_-_Form_Responses_1.cs
             data.append(parse_score_block(discord, scores))
 
 
+
 with open("resources/parsed_output.csv", "w", encoding="utf8", newline='') as csv_out:
     output = csv.writer(csv_out, quoting=csv.QUOTE_MINIMAL)
     for line in data:

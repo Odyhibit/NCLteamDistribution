@@ -16,7 +16,7 @@ import TeamMember
 def load_scores():
     score_list = []
     with open(scores_file, "r", encoding="utf-8") as score_file:
-        score_file.readline()  # this skips the column headers
+        #  score_file.readline()  # this skips the column headers
         for line in score_file:
             if len(line) > 1:
                 row = line.rstrip("\n").split(",")
@@ -26,6 +26,7 @@ def load_scores():
 
 def get_first_number(score_fraction: str) -> str:
     return score_fraction[0:score_fraction.find(" /")]
+
 
 def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
@@ -255,7 +256,7 @@ def get_int_scores():
     int_scores = []
     for score in scores:
         int_scores.append([score[0]] + [int(x) for x in score[1:]])
-    #for score in int_scores:
+    # for score in int_scores:
     #    score.append(sum(score[1:]))
     print(int_scores)
     return int_scores
@@ -360,7 +361,7 @@ if __name__ == '__main__':
 
     # columns
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
-                    'Web Apps', 'Enumeration']
+                    'Enumeration', 'Web Apps']
     column_widths = [20, 9, 9, 9, 9, 9, 9, 9, 9, 9]
     print(load_scores())
     main()
