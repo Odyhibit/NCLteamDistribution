@@ -43,7 +43,7 @@ def get_first_number(score_fraction: str) -> str:
 
 def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
-    max_team_size = 6
+    #max_team_size = 6
     teams = []
     with open(captains_file, "r") as partials:
         partials.readline()  # read headers
@@ -344,7 +344,7 @@ def main():
     roster = load_pre_selections(scores)
     been_chosen = already_on_team(roster)
 
-    max_team_size = 7
+    #max_team_size = 6
 
     #  choose team selection method
     # roster_initial = greedy_team_selection(scores, roster)
@@ -367,11 +367,12 @@ if __name__ == '__main__':
     if os.name == "nt":
         display.setup_windows_console()
 
+
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
     scores_file = "resources/Individual_scores.csv"
     save_file = "resources/saved_teams.csv"
-
+    max_team_size = 6
     # columns
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
                     'Enumeration', 'Web Apps']
