@@ -50,7 +50,7 @@ print("Please open the leaderboard on cyber skyline and select the coach, and th
 print("Each set of scores will need to be on the clipboard start with '1' at the top left.")
 for i, category in enumerate(categories):
     print(" ")
-    input(f"Please copy the {category} leaderboard")
+    input(f"Please copy the {category} leaderboard \t press enter when ready")
     add_to_score_dict(process_clipboard(grab_clipboard()), i)
 
 with open("leaderboards.csv", "w") as output:
@@ -58,3 +58,4 @@ with open("leaderboards.csv", "w") as output:
         row = student + ","
         row += ",".join(score_dict[student])
         print(row)
+        output.write(row)
