@@ -43,7 +43,7 @@ def get_first_number(score_fraction: str) -> str:
 
 def load_pre_selections(all_scores):
     #  Team name,Discord Handle,Team Lead
-    max_team_size = 7
+    max_team_size = 6
     teams = []
     with open(captains_file, "r") as partials:
         partials.readline()  # read headers
