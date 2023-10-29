@@ -16,12 +16,25 @@ import TeamMember
 def load_scores():
     score_list = []
     with open(scores_file, "r", encoding="utf-8") as score_file:
-        #  score_file.readline()  # this skips the column headers
+        score_file.readline()  # this skips the column headers
         for line in score_file:
             if len(line) > 1:
                 row = line.rstrip("\n").split(",")
+                row = get_numerator_list(row)  # in case scores are in 280/300 style
+                print("This is a row", row)
                 score_list.append(row)
         return score_list
+
+
+def get_numerator_list(fraction_list: [str]) -> []:
+    numerator_only = []
+    for item in fraction_list:
+        if "/" in item:
+            index = item.find("/")
+            numerator_only.append(item[:index])
+        else:
+            numerator_only.append(item)
+    return numerator_only
 
 
 def get_first_number(score_fraction: str) -> str:
@@ -356,7 +369,7 @@ if __name__ == '__main__':
 
     # files
     captains_file = "resources/Team_leads_and_partial_teams.csv"
-    scores_file = "resources/parsed_output.csv"
+    scores_file = "resources/Individual_scores.csv"
     save_file = "resources/saved_teams.csv"
 
     # columns
