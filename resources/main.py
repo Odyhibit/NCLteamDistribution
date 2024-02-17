@@ -7,10 +7,8 @@ import statistics
 import sys
 from os.path import exists
 from typing import List
-import bisect
 import display
-import Team
-import TeamMember
+from resources import Team, TeamMember
 
 
 def load_scores():
@@ -369,9 +367,9 @@ if __name__ == '__main__':
 
 
     # files
-    captains_file = "resources/Team_leads_and_partial_teams.csv"
+    captains_file = "Team_leads_and_partial_teams.csv"
     scores_file = "resources/Individual_scores.csv"
-    save_file = "resources/saved_teams.csv"
+    save_file = "saved_teams.csv"
     max_team_size = 6
     # columns
     column_names = ["discord handle", 'OSI', 'Crypto', 'Password', 'Log', 'Network', 'Forensics', 'Scanning',
